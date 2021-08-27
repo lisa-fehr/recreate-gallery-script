@@ -1,0 +1,7 @@
+select,input,option{color:#808080;font-size:12px;}
+.outline,table{border:1px solid black;}
+.highlight1{background:#F2F2F2;}
+.highlight2{background:#E6E6E6;color:#848484}
+.rootFilter{background:#BBBBBB;font:bold;color:#21759B}
+.highlight0{background:#DDDDDD;font:bold;color:#21759B}
+.tabletop{background:black;color:#C0C0C0;text-align:center;}
