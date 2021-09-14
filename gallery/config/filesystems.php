@@ -40,6 +40,11 @@ return [
             'root' => storage_path('app/public/storage/gallery'),
         ],
 
+        'gallery' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/gallery'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

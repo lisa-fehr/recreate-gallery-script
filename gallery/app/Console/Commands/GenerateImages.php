@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -42,6 +43,15 @@ class GenerateImages extends Command
         $everything = Storage::disk("gallery-originals")->allFiles();
 
         foreach($everything as $image) {
+
+            $path = pathinfo($image, PATHINFO_DIRNAME);
+            $directory = Storage::disk('gallery')->path($path);
+            if (! File::exists($directory)) {
+                $this->info('Created a directory: ' . $path);
+
+                File::makeDirectory($directory, 0755, true, true);
+            }
+
             $this->resizeImage($image);
         }
 
@@ -50,8 +60,12 @@ class GenerateImages extends Command
 
     private function resizeImage($image)
     {
-        $destination = '/tmp';
         $path = Storage::disk('gallery-originals')->path($image);
-        Image::make($path)->resize(200, 200)->save($destination .'/'.basename($image, 'jpg') . "-resized.jpg");
+        $destination = Storage::disk('gallery')->path(
+            preg_replace('/([.][gjpne]{3,4})$/', '-resized\1', $image)
+        );
+
+        Image::make($path)->resize(200, 200)->save($destination);
+        $this->info('Created a thumbnail: ' . $image);
     }
 }
