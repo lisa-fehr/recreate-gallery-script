@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\UberGallery;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,10 @@ class GenerateImages extends Command
      *
      * @var string
      */
-    protected $description = 'Generate a processed copy of a folder of images.';
+    protected $description = 'Regenerate a gallery from a folder and a database';
+
+    private $imageDestination = null;
+    private $thumbnailDestination = null;
 
     /**
      * Create a new command instance.
@@ -40,32 +44,42 @@ class GenerateImages extends Command
      */
     public function handle()
     {
-        $everything = Storage::disk("gallery-originals")->allFiles();
+        $originalImages = Storage::disk("gallery-originals")->allFiles();
 
-        foreach($everything as $image) {
+        foreach($originalImages as $originalImage) {
 
-            $path = pathinfo($image, PATHINFO_DIRNAME);
-            $directory = Storage::disk('gallery')->path($path);
-            if (! File::exists($directory)) {
-                $this->info('Created a directory: ' . $path);
+            $path = pathinfo($originalImage, PATHINFO_DIRNAME);
+            $this->imageDestination = Storage::disk('gallery')->path($path);
+            $this->thumbnailDestination = $this->imageDestination . '/t';
 
-                File::makeDirectory($directory, 0755, true, true);
+            if (! File::exists($this->thumbnailDestination)) {
+                $this->info('Created directories for: ' . $path);
+
+                File::makeDirectory($this->thumbnailDestination, 0777, true, true);
             }
 
-            $this->resizeImage($image);
+            $this->resizeImage($originalImage);
         }
 
         return 0;
     }
 
-    private function resizeImage($image)
+    private function resizeImage($originalImage)
     {
-        $path = Storage::disk('gallery-originals')->path($image);
-        $destination = Storage::disk('gallery')->path(
-            preg_replace('/([.][gjpne]{3,4})$/', '-resized\1', $image)
-        );
+        $originalPath = Storage::disk('gallery-originals')->path($originalImage);
 
-        Image::make($path)->resize(200, 200)->save($destination);
-        $this->info('Created a thumbnail: ' . $image);
+        $name = pathinfo($originalImage, PATHINFO_FILENAME);
+        $image = UberGallery::where('img', $name)->first();
+
+        if ($image) {
+            $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
+            $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
+
+            Image::make($originalPath)->resize(125, 175)->save($thumbPath);
+            Image::make($originalPath)->fit(650)->save($imagePath);
+            $this->info('Created an image and thumbnail: ' . $originalImage);
+        } else {
+            $this->info('Could not find: ' . $originalImage);
+        }
     }
 }
