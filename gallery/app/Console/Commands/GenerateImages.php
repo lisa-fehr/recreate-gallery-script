@@ -55,7 +55,7 @@ class GenerateImages extends Command
             if (! File::exists($this->thumbnailDestination)) {
                 $this->info('Created directories for: ' . $path);
 
-                File::makeDirectory($this->thumbnailDestination, 0777, true, true);
+                File::makeDirectory($this->thumbnailDestination, 0755, true, true);
             }
 
             $this->resizeImage($originalImage);
