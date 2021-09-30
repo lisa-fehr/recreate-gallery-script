@@ -28,16 +28,6 @@ class GenerateImages extends Command
     private $thumbnailDestination = null;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -64,12 +54,15 @@ class GenerateImages extends Command
         return 0;
     }
 
+    /**
+     * @param $originalImage
+     */
     private function resizeImage($originalImage)
     {
         $originalPath = Storage::disk('gallery-originals')->path($originalImage);
 
         $name = pathinfo($originalImage, PATHINFO_FILENAME);
-        $image = UberGallery::where('img', $name)->first();
+        $image = UberGallery::firstWhere('img', $name);
 
         if ($image) {
             $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
