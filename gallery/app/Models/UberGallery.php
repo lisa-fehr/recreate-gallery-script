@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class UberGallery extends Model
 {
@@ -31,5 +32,9 @@ class UberGallery extends Model
             'id', // Local key on the UberGallery...
             'tag_id' // Local key on the UberTagAssoc...
         );
+    }
+
+    public function getThumbnailAttribute() {
+        return Storage::disk('gallery')->url($this->tag->directory . '/t/' . $this->thumb);
     }
 }
