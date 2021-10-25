@@ -8,13 +8,14 @@ Setup:
     - php artisan migrate
     - php artisan db:seed
     - php artisan images:generate
+    - npm install & npm run dev
 
 I hope to:
 - [x] Have a command to generate thumbnails and medium sized images from original images dropped in the `storage/gallery` folder
     - it should use the seeded database to keep the original image and thumbnail paths
 - [ ] Have a command to regenerate thumbnails from a tag (or all)
     - it should take thumbnail width/height as an option
-- [ ] Have a popup gallery in Vue/Tailwind
+- [x] Have a popup gallery in Vue/Tailwind
     - ideally mobile friendly
 - [ ] Recreate the breadcrumbs from the existing tags table
 - [ ] Add pagination
