@@ -54,12 +54,12 @@ class UberGallery extends Model
         return null;
     }
 
-    public function scopeTags(Builder $builder, string $tag)
+    public function scopeTags(Builder $builder, ...$tags)
     {
         $builder
             ->select('uber_gallery.*')
             ->join('uber_tag_assoc', 'uber_gallery.id', '=', 'uber_tag_assoc.image_id')
             ->join('uber_tags', 'uber_tag_assoc.tag_id', '=', 'uber_tags.id')
-            ->where('uber_tags.name', $tag);
+            ->whereIn('uber_tags.name', $tags);
     }
 }
