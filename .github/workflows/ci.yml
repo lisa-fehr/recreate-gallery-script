@@ -25,10 +25,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: "Run setup"
-        run: composer install
+        run: |
+          composer install -q --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --dev
+          cp .env.example .env
+          php artisan key:generate
+          php artisan config:cache
 
       - name: "Run friendsofphp/php-cs-fixer"
-        run: php vendor/bin/php-cs-fixer fix . --dry-run --verbose
+        run: php vendor/bin/php-cs-fixer fix  --config=.php-cs --dry-run --verbose
 
       - name: "Run tests"
         run: php vendor/bin/phpunit
