@@ -13,7 +13,6 @@ class CreateUberGalleryTable extends Migration
      */
     public function up()
     {
-
         Schema::create('uber_gallery', function (Blueprint $table) {
             $table->id();
             $table->date('occurred');

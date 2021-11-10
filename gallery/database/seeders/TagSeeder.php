@@ -7,7 +7,6 @@ use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -15,7 +14,6 @@ class TagSeeder extends Seeder
      */
     public function run()
     {
-
         UberTags::truncate();
 
         $parentFilters = [

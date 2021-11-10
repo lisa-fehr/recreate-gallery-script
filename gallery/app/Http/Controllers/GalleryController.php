@@ -16,7 +16,6 @@ class GalleryController extends Controller
             ])
             ->get()
             ->reject(function (UberGallery $image) {
-
                 return empty($image->thumbnail);
             })
             ->map(function (UberGallery $image) {

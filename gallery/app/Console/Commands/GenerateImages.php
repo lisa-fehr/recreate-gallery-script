@@ -36,8 +36,7 @@ class GenerateImages extends Command
     {
         $originalImages = Storage::disk("gallery-originals")->allFiles();
 
-        foreach($originalImages as $originalImage) {
-
+        foreach ($originalImages as $originalImage) {
             $path = pathinfo($originalImage, PATHINFO_DIRNAME);
             $this->imageDestination = Storage::disk('gallery')->path($path);
             $this->thumbnailDestination = $this->imageDestination . '/t';
