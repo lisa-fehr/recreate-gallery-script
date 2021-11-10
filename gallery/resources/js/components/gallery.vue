@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="flex items-center justify-center h-screen">
+        <div class="flex flex-col h-screen">
+            <navigation :filters="filters"></navigation>
             <div class="grid grid-cols-4 gap-2 p-5 bg-yellow-600">
                 <thumbnail v-for="image in images" :image="image.thumbnail" :key="image.thumbnail" @click.native="(currentImage = image.image)"/>
             </div>
@@ -10,21 +11,38 @@
 </template>
 
 <script>
+    import Navigation from "../components/navigation";
+
     import Thumbnail from "./thumbnail";
     import Modal from "./modal";
 
     export default {
-        components: {Modal, Thumbnail},
+        components: {Navigation, Modal, Thumbnail},
         props: {
-            images: {
-                default: [],
-                type: Array,
+            filters: {
+                default: null,
+                type: String,
             }
         },
         data() {
             return {
-                currentImage: null
+                currentImage: null,
+                images: [],
             }
+        },
+        created() {
+            this.getImages();
+        },
+        methods: {
+            getImages() {
+                let url = '/gallery';
+                if (this.filters) {
+                    url += '?filter[tags]=' + this.filters;
+                }
+                axios.get(url).then(response => {
+                    this.images = response.data;
+                });
+            },
         },
     };
 </script>

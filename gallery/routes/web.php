@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +19,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::prefix('portfolio')->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::get('photos', function () {
+        return view('welcome')->with('filter', ['tags' => 'photos,california2014']);
+    });
+
+    Route::get('California', function () {
+        return view('welcome')->with('filter', ['tags' => 'california,california2014']);
+    });
+
+    Route::get('California/2014', function () {
+        return view('welcome')->with('filter', ['tags' => 'california2014']);
+    });
+});
+
 Route::get('/gallery', GalleryController::class);
 // /gallery?filter[tags]=California2014
+Route::get('/tags/{filters?}', TagController::class);

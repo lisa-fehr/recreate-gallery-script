@@ -1,6 +1,6 @@
 <template>
     <div>
-        <gallery v-if="images" :images="images"/>
+        <gallery :filters="filters"/>
     </div>
 </template>
 <script>
@@ -8,20 +8,10 @@
 
     export default {
         components: {Gallery},
-        data() {
-            return {
-                images: null,
+        props: {
+            filters: {
+                default: []
             }
-        },
-        created() {
-            this.getImages();
-        },
-        methods: {
-            getImages() {
-                axios.get('/gallery').then(response => {
-                    this.images = response.data;
-                });
-            }
-        },
+        }
     };
 </script>
