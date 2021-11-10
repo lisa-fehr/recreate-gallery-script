@@ -35,7 +35,6 @@ class TagAssocSeeder extends Seeder
         ];
 
         collect($images)->each(function ($item) use ($california2014) {
-
             $image = UberGallery::where('img', $item)->first();
             UberTagAssoc::create([
                 'tag_id' => $california2014->id,

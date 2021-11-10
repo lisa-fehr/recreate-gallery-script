@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UberTags extends Model
 {
-
     use HasFactory;
 
     public $timestamps = false;

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UberGallery extends Model
 {
-
     use HasFactory;
 
     protected $table = 'uber_gallery';
@@ -23,8 +22,8 @@ class UberGallery extends Model
         'text',
     ];
 
-    public function tag() {
-
+    public function tag()
+    {
         return $this->hasOneThrough(
             UberTags::class,
             UberTagAssoc::class,
@@ -37,7 +36,6 @@ class UberGallery extends Model
 
     public function getImageAttribute()
     {
-
         $url = $this->tag->directory . '/' . $this->img . '.' . $this->type;
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
@@ -45,8 +43,8 @@ class UberGallery extends Model
         return null;
     }
 
-    public function getThumbnailAttribute() {
-
+    public function getThumbnailAttribute()
+    {
         $url = $this->tag->directory . '/t/' . $this->thumb;
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
