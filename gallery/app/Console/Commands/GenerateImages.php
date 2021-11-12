@@ -68,10 +68,35 @@ class GenerateImages extends Command
             $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
 
             Image::make($originalPath)->resize(125, 175)->save($thumbPath);
-            Image::make($originalPath)->fit(650)->save($imagePath);
+
+            $modalImage = Image::make($originalPath);
+            list($width, $height) = $this->calculateWidthHeight($modalImage);
+            $modalImage->resize($width, $height, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($imagePath);
+
             $this->info('Created an image and thumbnail: ' . $originalImage);
         } else {
             $this->info('Could not find: ' . $originalImage);
         }
+    }
+
+    /**
+     * @param \Intervention\Image\Image $modalImage
+     * @return array
+     */
+    private function calculateWidthHeight(\Intervention\Image\Image $modalImage)
+    {
+        $width = 800;
+        $height = 1000;
+        if ($modalImage->height() < $height || $modalImage->width() < $width) {
+            $width = $modalImage->width();
+            $height = $modalImage->height();
+        } elseif ($modalImage->height() > $modalImage->width()) {
+            $width = null;
+        } else {
+            $height = null;
+        }
+        return [$width, $height];
     }
 }

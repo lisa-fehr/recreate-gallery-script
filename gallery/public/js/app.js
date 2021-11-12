@@ -2080,6 +2080,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2098,24 +2107,65 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       currentImage: null,
-      images: []
+      images: [],
+      pagination: null
     };
   },
   created: function created() {
-    this.getImages();
+    this.getImages(1);
+  },
+  computed: {
+    currentPageNumber: function currentPageNumber() {
+      return this.pagination ? this.pagination.current_page : 1;
+    }
   },
   methods: {
-    getImages: function getImages() {
-      var _this = this;
-
+    next: function next() {
+      this.getImages(this.currentPageNumber + 1);
+    },
+    galleryUrl: function galleryUrl(page) {
       var url = '/gallery';
+      url += "?page=" + page;
 
       if (this.filters) {
-        url += '?filter[tags]=' + this.filters;
+        url += '&filter[tags]=' + this.filters;
       }
 
-      axios.get(url).then(function (response) {
-        _this.images = response.data;
+      return url;
+    },
+    getImages: function getImages(page) {
+      var _this = this;
+
+      axios.get(this.galleryUrl(page)).then(function (response) {
+        var _response$data = response.data,
+            data = _response$data.data,
+            current_page = _response$data.current_page,
+            first_page_url = _response$data.first_page_url,
+            from = _response$data.from,
+            last_page = _response$data.last_page,
+            last_page_url = _response$data.last_page_url,
+            links = _response$data.links,
+            next_page_url = _response$data.next_page_url,
+            path = _response$data.path,
+            per_page = _response$data.per_page,
+            prev_page_url = _response$data.prev_page_url,
+            to = _response$data.to,
+            total = _response$data.total;
+        _this.images = data;
+        _this.pagination = {
+          current_page: current_page,
+          first_page_url: first_page_url,
+          from: from,
+          last_page: last_page,
+          last_page_url: last_page_url,
+          links: links,
+          next_page_url: next_page_url,
+          path: path,
+          per_page: per_page,
+          prev_page_url: prev_page_url,
+          to: to,
+          total: total
+        };
       });
     }
   }
@@ -2425,7 +2475,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.shadow[data-v-478d961c] {\n    position: absolute;\n    top: 0;\n    height: 100vh;\n    width: 100vw;\n    background-color: rgba(0, 0, 0, 0.53);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ndiv.shadow[data-v-478d961c] {\n    position: fixed;\n    z-index: 9998;\n    top: 0;\n    left: 0;\n    height: 100vh;\n    width: 100vw;\n    background-color: rgba(0, 0, 0, 0.53);\n    display: flex;\n    transition: opacity 0.3s ease;\n    align-items: center;\n    justify-content: center;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -20711,9 +20761,9 @@ var render = function() {
           _c(
             "div",
             { staticClass: "grid grid-cols-4 gap-2 p-5 bg-yellow-600" },
-            _vm._l(_vm.images, function(image) {
+            _vm._l(_vm.images, function(image, index) {
               return _c("thumbnail", {
-                key: image.thumbnail,
+                key: "image-" + index,
                 attrs: { image: image.thumbnail },
                 nativeOn: {
                   click: function($event) {
@@ -20723,7 +20773,23 @@ var render = function() {
               })
             }),
             1
-          )
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex items-center" }, [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.next()
+                  }
+                }
+              },
+              [_vm._v("\n                Next\n            ")]
+            ),
+            _vm._v(" "),
+            _c("button", [_vm._v("\n                Previous\n            ")])
+          ])
         ],
         1
       ),
@@ -20778,7 +20844,7 @@ var render = function() {
     [
       _c("div", { staticClass: "modal" }, [
         _c("img", {
-          staticClass: "max-w-screen max-h-screen",
+          staticClass: "object-scale-down max-w-screen max-h-screen",
           attrs: { src: _vm.image }
         })
       ])

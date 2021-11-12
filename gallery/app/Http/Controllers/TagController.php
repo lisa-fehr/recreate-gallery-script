@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UberTags;
+use Illuminate\Support\Facades\Route;
 
 class TagController extends Controller
 {
@@ -13,6 +14,9 @@ class TagController extends Controller
                 'children' =>
                     UberTags::where('parent', 0)
                     ->get()
+                    ->filter(function ($tag) {
+                        return Route::has($tag->name);
+                    })
             ]);
         }
 
@@ -28,6 +32,9 @@ class TagController extends Controller
                     ->with('parent')
                     ->orderBy('parent')
                     ->get()
+                    ->filter(function ($tag) {
+                        return Route::has($tag->name);
+                    })
         ]);
     }
 }

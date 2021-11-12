@@ -27,15 +27,19 @@ Route::prefix('portfolio')->group(function () {
 
     Route::get('photos', function () {
         return view('welcome')->with('filter', ['tags' => 'photos,california2014']);
-    });
+    })->name('photos');
+
+    Route::get('events', function () {
+        return view('welcome')->with('filter', ['tags' => 'events,california2014']);
+    })->name('events');
 
     Route::get('California', function () {
         return view('welcome')->with('filter', ['tags' => 'california,california2014']);
-    });
+    })->name('California');
 
     Route::get('California/2014', function () {
         return view('welcome')->with('filter', ['tags' => 'california2014']);
-    });
+    })->name('California2014');
 });
 
 Route::get('/gallery', GalleryController::class);
