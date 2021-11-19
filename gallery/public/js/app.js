@@ -2239,7 +2239,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2321,7 +2320,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
 //
 //
 //
@@ -20760,7 +20758,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "grid grid-cols-4 gap-2 p-5 bg-yellow-600" },
+            { staticClass: "grid grid-cols-6 gap-2 p-5 bg-yellow-600" },
             _vm._l(_vm.images, function(image, index) {
               return _c("thumbnail", {
                 key: "image-" + index,
@@ -20876,54 +20874,54 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     !_vm.loading
-      ? _c("div", { staticClass: "flex justify-items-start" }, [
-          _c(
-            "div",
-            { staticClass: "flex gap-4 p-5" },
-            [
-              _vm.hasCurrent()
-                ? _c(
-                    "a",
+      ? _c("div", {}, [
+          _vm.hasCurrent()
+            ? _c(
+                "a",
+                {
+                  staticClass: "pl-5 pt-5 flex w-full items-center",
+                  attrs: { href: _vm.parentUrl() }
+                },
+                [
+                  _c(
+                    "svg",
                     {
-                      staticClass: "inline-flex",
-                      attrs: { href: _vm.parentUrl() }
+                      staticClass: "h-6 w-6 mr-4",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor"
+                      }
                     },
                     [
-                      _c(
-                        "svg",
-                        {
-                          staticClass: "h-6 w-6",
-                          attrs: {
-                            xmlns: "http://www.w3.org/2000/svg",
-                            fill: "none",
-                            viewBox: "0 0 24 24",
-                            stroke: "currentColor"
-                          }
-                        },
-                        [
-                          _c("path", {
-                            attrs: {
-                              "stroke-linecap": "round",
-                              "stroke-linejoin": "round",
-                              "stroke-width": "2",
-                              d:
-                                "M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"
-                            }
-                          })
-                        ]
-                      ),
-                      _vm._v(
-                        " Back to " +
-                          _vm._s(_vm.parentName()) +
-                          "\n            "
-                      )
+                      _c("path", {
+                        attrs: {
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round",
+                          "stroke-width": "2",
+                          d:
+                            "M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"
+                        }
+                      })
                     ]
+                  ),
+                  _vm._v(
+                    "\n            Back to " +
+                      _vm._s(_vm.parentName()) +
+                      "\n        "
                   )
-                : _vm._e(),
-              _vm._v(" "),
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex" },
+            [
               _c(
                 "div",
-                { staticClass: "inline-flex" },
+                { staticClass: "p-5 flex w-32" },
                 [
                   _c("star", { attrs: { active: true } }),
                   _vm._v(" all\n            ")
@@ -20932,24 +20930,23 @@ var render = function() {
               ),
               _vm._v(" "),
               _vm._l(_vm.navigation.children, function(nav) {
-                return _c("div", { key: nav.name }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "inline-flex",
-                      attrs: { href: _vm.childUrl(nav) }
-                    },
-                    [
-                      _c("star"),
-                      _vm._v(
-                        " " +
-                          _vm._s(nav.display_name || nav.name) +
-                          "\n                "
-                      )
-                    ],
-                    1
-                  )
-                ])
+                return _c(
+                  "a",
+                  {
+                    key: nav.name,
+                    staticClass: "p-5 flex w-32",
+                    attrs: { href: _vm.childUrl(nav) }
+                  },
+                  [
+                    _c("star"),
+                    _vm._v(
+                      " " +
+                        _vm._s(nav.display_name || nav.name) +
+                        "\n            "
+                    )
+                  ],
+                  1
+                )
               })
             ],
             2
@@ -20986,7 +20983,7 @@ var render = function() {
       ? _c(
           "svg",
           {
-            staticClass: "h-5 w-5",
+            staticClass: "h-5 w-5 mr-2",
             attrs: {
               xmlns: "http://www.w3.org/2000/svg",
               viewBox: "0 0 20 20",
@@ -21005,7 +21002,7 @@ var render = function() {
       : _c(
           "svg",
           {
-            staticClass: " invert h-6 w-6",
+            staticClass: "invert h-6 w-6 mr-2",
             attrs: {
               xmlns: "http://www.w3.org/2000/svg",
               fill: "none",

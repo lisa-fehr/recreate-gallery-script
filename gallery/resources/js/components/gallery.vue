@@ -2,7 +2,7 @@
     <div>
         <div class="flex flex-col h-screen">
             <navigation :filters="filters"></navigation>
-            <div class="grid grid-cols-4 gap-2 p-5 bg-yellow-600">
+            <div class="grid grid-cols-6 gap-2 p-5 bg-yellow-600">
                 <thumbnail v-for="(image, index) in images" :image="image.thumbnail" :key="`image-${index}`" @click.native="(currentImage = image.image)"/>
             </div>
             <div class="flex items-center">

@@ -18,7 +18,7 @@ class GalleryController extends Controller
             ->whereHas('tag')
             ->whereNotNull('thumb')
             ->orderBy('thumb', 'desc')
-            ->paginate(8);
+            ->paginate(12);
 
         return response()->json($paginator);
     }

@@ -67,7 +67,7 @@ class GenerateImages extends Command
             $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
             $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
 
-            Image::make($originalPath)->resize(125, 175)->save($thumbPath);
+            Image::make($originalPath)->resize(125, 175)->sharpen(5)->save($thumbPath, 75, pathinfo($image->thumb, PATHINFO_EXTENSION));
 
             $modalImage = Image::make($originalPath);
             list($width, $height) = $this->calculateWidthHeight($modalImage);
