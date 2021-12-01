@@ -2,18 +2,11 @@
     <div>
         <div class="flex flex-col h-screen">
             <navigation :filters="filters"></navigation>
+            <pagination @next="next()" :data="pagination" />
             <div class="grid grid-cols-6 gap-2 p-5 bg-yellow-600">
                 <thumbnail v-for="(image, index) in images" :image="image.thumbnail" :key="`image-${index}`" @click.native="(currentImage = image.image)"/>
             </div>
-            <div class="flex items-center">
-                <button @click="next()">
-                    Next
-                </button>
-
-                <button>
-                    Previous
-                </button>
-            </div>
+            <pagination @next="next()" :data="pagination" />
         </div>
         <modal v-if="currentImage" :image="currentImage" @close="currentImage=null" />
     </div>
@@ -25,8 +18,10 @@
     import Thumbnail from "./thumbnail";
     import Modal from "./modal";
 
+    import Pagination from './pagination';
+
     export default {
-        components: {Navigation, Modal, Thumbnail},
+        components: {Pagination, Navigation, Modal, Thumbnail},
         props: {
             filters: {
                 default: null,
