@@ -2,13 +2,15 @@
     <div>
         <div class="flex flex-col h-screen">
             <navigation :filters="filters"></navigation>
-            <pagination @next="next()" :data="pagination" />
+            <pagination @next="next()" @previous="previous()" @goTo="goToPage" :data="pagination" />
             <div class="grid grid-cols-6 gap-2 p-5 bg-yellow-600">
                 <thumbnail v-for="(image, index) in images" :image="image.thumbnail" :key="`image-${index}`" @click.native="(currentImage = image.image)"/>
             </div>
-            <pagination @next="next()" :data="pagination" />
+            <pagination @next="next()" @previous="previous()" :data="pagination" />
         </div>
-        <modal v-if="currentImage" :image="currentImage" @close="currentImage=null" />
+        <teleport to="body">
+            <modal v-if="currentImage" :image="currentImage" @close="currentImage=null" />
+        </teleport>
     </div>
 </template>
 
@@ -44,8 +46,14 @@
             }
         },
         methods: {
+            goToPage(number) {
+                this.getImages(number);
+            },
             next() {
                 this.getImages(this.currentPageNumber + 1);
+            },
+            previous() {
+                this.getImages(this.currentPageNumber - 1);
             },
             galleryUrl(page) {
                 let url = '/gallery';

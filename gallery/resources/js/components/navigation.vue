@@ -49,7 +49,7 @@
         },
         methods: {
             getFilters() {
-                axios.get('/tags/' + this.filters).then(response => {
+                axios.get('/tags/' + (this.filters ?? '')).then(response => {
                     this.navigation = response.data;
                     this.removeTheAllTag();
                     this.loading = false;
