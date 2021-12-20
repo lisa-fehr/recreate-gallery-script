@@ -2,6 +2,6 @@ require('./bootstrap');
 import { createApp } from 'vue';
 import App from './views/app.vue'
 
-let app=createApp(App)
+const mountEl = document.querySelector("#app app");
 
-app.mount("#app")
+createApp(App, {...mountEl.dataset}).mount("#app")

@@ -19534,7 +19534,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: {
     filters: {
-      "default": null,
       type: String
     }
   }
@@ -19983,12 +19982,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _views_app_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./views/app.vue */ "./resources/js/views/app.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
-var app = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_views_app_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
-app.mount("#app");
+var mountEl = document.querySelector("#app app");
+(0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_views_app_vue__WEBPACK_IMPORTED_MODULE_1__["default"], _objectSpread({}, mountEl.dataset)).mount("#app");
 
 /***/ }),
 
