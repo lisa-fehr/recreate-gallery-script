@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\UberGallery;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 

@@ -40,7 +40,7 @@ class UberGallery extends Model
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
         }
-        return '/storage/gallery/Photos/California/2014/t/141010Aquarium_9.gif';
+        return Storage::disk('gallery')->url('/missing.gif');
     }
 
     public function getThumbnailAttribute()
@@ -52,7 +52,7 @@ class UberGallery extends Model
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
         }
-        return'/storage/gallery/Photos/California/2014/t/141010Aquarium_9.gif';
+        return Storage::disk('gallery')->url('/missing.gif');
     }
 
     public function scopeTags(Builder $builder, ...$tags)

@@ -10,6 +10,13 @@ use Intervention\Image\Facades\Image;
 
 class GenerateImages extends Command
 {
+    const THUMBNAIL_WIDTH = 125;
+    const THUMBNAIL_HEIGHT = 175;
+    const THUMBNAIL_QUALITY = 75;
+
+    const MAX_IMAGE_WIDTH = 800;
+    const MAX_IMAGE_HEIGHT = 1000;
+
     /**
      * The name and signature of the console command.
      *
@@ -50,6 +57,8 @@ class GenerateImages extends Command
             $this->resizeImage($originalImage);
         }
 
+        $this->createMissingThumbnail();
+
         return 0;
     }
 
@@ -67,7 +76,10 @@ class GenerateImages extends Command
             $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
             $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
 
-            Image::make($originalPath)->resize(125, 175)->sharpen(5)->save($thumbPath, 75, pathinfo($image->thumb, PATHINFO_EXTENSION));
+            Image::make($originalPath)
+                ->resize(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT)
+                ->sharpen(5)
+                ->save($thumbPath, self::THUMBNAIL_QUALITY, pathinfo($image->thumb, PATHINFO_EXTENSION));
 
             $modalImage = Image::make($originalPath);
             list($width, $height) = $this->calculateWidthHeight($modalImage);
@@ -87,8 +99,8 @@ class GenerateImages extends Command
      */
     private function calculateWidthHeight(\Intervention\Image\Image $modalImage)
     {
-        $width = 800;
-        $height = 1000;
+        $width = self::MAX_IMAGE_WIDTH;
+        $height = self::MAX_IMAGE_HEIGHT;
         if ($modalImage->height() < $height || $modalImage->width() < $width) {
             $width = $modalImage->width();
             $height = $modalImage->height();
@@ -98,5 +110,15 @@ class GenerateImages extends Command
             $height = null;
         }
         return [$width, $height];
+    }
+
+    private function createMissingThumbnail()
+    {
+        $img = Image::canvas(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, '#ffa500');
+        $img->text('Missing Image', 20, 20, function ($font) {
+            $font->color('#000');
+        });
+        $img->save(Storage::disk('gallery')->path('missing.gif'), 90, 'gif');
+        $this->info('Created missing image: ' . Storage::disk('gallery')->path('missing.gif'));
     }
 }

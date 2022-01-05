@@ -19663,10 +19663,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onPrevious: _cache[3] || (_cache[3] = function ($event) {
       return $options.previous();
     }),
+    onGoTo: $options.goToPage,
     data: $data.pagination
   }, null, 8
   /* PROPS */
-  , ["data"])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
+  , ["onGoTo", "data"])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
     to: "body"
   }, [$data.currentImage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_modal, {
     key: 0,
@@ -19992,7 +19993,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
-var mountEl = document.querySelector("#app app");
+var mountEl = document.querySelector("#app");
 (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_views_app_vue__WEBPACK_IMPORTED_MODULE_1__["default"], _objectSpread({}, mountEl.dataset)).mount("#app");
 
 /***/ }),
