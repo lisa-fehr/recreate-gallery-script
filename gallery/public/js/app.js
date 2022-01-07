@@ -19338,6 +19338,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  emits: ['close'],
   props: {
     image: {
       required: false,
@@ -19449,6 +19450,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'pagination',
+  emits: ['previous', 'goTo', 'next'],
   components: {
     Arrow: _components_arrow__WEBPACK_IMPORTED_MODULE_0__["default"]
   },

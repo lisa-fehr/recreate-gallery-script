@@ -8,6 +8,7 @@
 
 <script>
     export default {
+        emits: ['close'],
         props: {
             image: {
                 required: false,

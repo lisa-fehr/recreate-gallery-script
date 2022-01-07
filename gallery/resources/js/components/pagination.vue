@@ -18,6 +18,7 @@
     import Arrow from '../components/arrow';
     export default {
         name: 'pagination',
+        emits: ['previous', 'goTo', 'next'],
         components: {Arrow},
         props: {
             data: {
