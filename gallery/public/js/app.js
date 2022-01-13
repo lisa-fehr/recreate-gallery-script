@@ -19261,20 +19261,36 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.getImages(1);
   },
+  watch: {
+    currentPageNumber: function currentPageNumber(page) {
+      this.getImages(page);
+    }
+  },
   computed: {
     currentPageNumber: function currentPageNumber() {
+      var urlCurrentPage = window.location.href.replace(/^.+\?([0-9]+).*?$/g, "$1");
+
+      if (this.pagination && urlCurrentPage !== window.location.href && urlCurrentPage !== this.pagination.current_page) {
+        return this.pagination.current_page = parseInt(urlCurrentPage);
+      }
+
       return this.pagination ? this.pagination.current_page : 1;
     }
   },
   methods: {
-    goToPage: function goToPage(number) {
-      this.getImages(number);
+    goToPage: function goToPage(_ref) {
+      var pageNumber = _ref.pageNumber,
+          url = _ref.url;
+      this.pagination.current_page = pageNumber;
+      window.history.pushState({}, '', url);
     },
-    next: function next() {
-      this.getImages(this.currentPageNumber + 1);
+    next: function next(url) {
+      this.pagination.current_page = this.currentPageNumber + 1;
+      window.history.pushState({}, '', url);
     },
-    previous: function previous() {
-      this.getImages(this.currentPageNumber - 1);
+    previous: function previous(url) {
+      this.pagination.current_page = this.currentPageNumber - 1;
+      window.history.pushState({}, '', url);
     },
     galleryUrl: function galleryUrl(page) {
       var url = '/gallery';
@@ -19293,29 +19309,17 @@ __webpack_require__.r(__webpack_exports__);
         var _response$data = response.data,
             data = _response$data.data,
             current_page = _response$data.current_page,
-            first_page_url = _response$data.first_page_url,
             from = _response$data.from,
             last_page = _response$data.last_page,
-            last_page_url = _response$data.last_page_url,
-            links = _response$data.links,
-            next_page_url = _response$data.next_page_url,
-            path = _response$data.path,
             per_page = _response$data.per_page,
-            prev_page_url = _response$data.prev_page_url,
             to = _response$data.to,
             total = _response$data.total;
         _this.images = data;
         _this.pagination = {
           current_page: current_page,
-          first_page_url: first_page_url,
           from: from,
           last_page: last_page,
-          last_page_url: last_page_url,
-          links: links,
-          next_page_url: next_page_url,
-          path: path,
           per_page: per_page,
-          prev_page_url: prev_page_url,
           to: to,
           total: total
         };
@@ -19460,13 +19464,37 @@ __webpack_require__.r(__webpack_exports__);
       "default": {}
     }
   },
+  methods: {
+    navigateTo: function navigateTo(direction) {
+      if (this.data.current_page + direction > this.data.last_page || this.data.current_page + direction < 1) {
+        return null;
+      }
+
+      return this.baseUrl + '/?' + (this.data.current_page + direction);
+    }
+  },
   computed: {
+    baseUrl: function baseUrl() {
+      return window.location.pathname.replace(/\/+$/, '');
+    },
+    nextUrl: function nextUrl() {
+      return this.navigateTo(+1);
+    },
+    previousUrl: function previousUrl() {
+      return this.navigateTo(-1);
+    },
     total: function total() {
       if (!this.data) {
         return 0;
       }
 
       return Math.round(this.data.total / this.data.per_page);
+    },
+    disablePrevious: function disablePrevious() {
+      return this.data.current_page <= 1 || this.data.current_page > this.data.last_page;
+    },
+    disableNext: function disableNext() {
+      return this.data.current_page >= this.data.last_page;
     }
   }
 });
@@ -19488,7 +19516,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'star',
   props: {
     active: {
-      "default": false
+      type: Boolean
     }
   }
 });
@@ -19636,17 +19664,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8
   /* PROPS */
   , ["filters"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
-    onNext: _cache[0] || (_cache[0] = function ($event) {
-      return $options.next();
-    }),
-    onPrevious: _cache[1] || (_cache[1] = function ($event) {
-      return $options.previous();
-    }),
+    onNext: $options.next,
+    onPrevious: $options.previous,
     onGoTo: $options.goToPage,
     data: $data.pagination
   }, null, 8
   /* PROPS */
-  , ["onGoTo", "data"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.images, function (image, index) {
+  , ["onNext", "onPrevious", "onGoTo", "data"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.images, function (image, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_thumbnail, {
       image: image.thumbnail,
       key: "image-".concat(index),
@@ -19659,22 +19683,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128
   /* KEYED_FRAGMENT */
   ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
-    onNext: _cache[2] || (_cache[2] = function ($event) {
-      return $options.next();
-    }),
-    onPrevious: _cache[3] || (_cache[3] = function ($event) {
-      return $options.previous();
-    }),
+    onNext: $options.next,
+    onPrevious: $options.previous,
     onGoTo: $options.goToPage,
     data: $data.pagination
   }, null, 8
   /* PROPS */
-  , ["onGoTo", "data"])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
+  , ["onNext", "onPrevious", "onGoTo", "data"])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
     to: "body"
   }, [$data.currentImage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_modal, {
     key: 0,
     image: $data.currentImage,
-    onClose: _cache[4] || (_cache[4] = function ($event) {
+    onClose: _cache[0] || (_cache[0] = function ($event) {
       return $data.currentImage = null;
     })
   }, null, 8
@@ -19770,7 +19790,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   })], 8
   /* PROPS */
   , _hoisted_2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_star, {
-    active: true
+    active: ""
   }), _hoisted_5]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.navigation.children, function (nav) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
       key: nav.name,
@@ -19803,9 +19823,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "flex w-full justify-between px-5"
+  "class": "flex w-full justify-between px-5 hover:text-red"
 };
-var _hoisted_2 = ["disabled"];
+var _hoisted_2 = ["href", "disabled"];
 
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Previous");
 
@@ -19813,18 +19833,23 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 
 var _hoisted_5 = ["value"];
 var _hoisted_6 = ["value"];
-var _hoisted_7 = ["disabled"];
+var _hoisted_7 = ["href", "disabled"];
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Next");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_arrow = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("arrow");
 
-  return $props.data ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: _cache[0] || (_cache[0] = function ($event) {
-      return _ctx.$emit('previous');
-    }),
-    disabled: $props.data.current_page === 1
+  return $props.data ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    href: $options.previousUrl,
+    onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+      return _ctx.$emit('previous', $options.previousUrl);
+    }, ["prevent"])),
+    disabled: $options.disablePrevious,
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+      'cursor-not-allowed  text-neutral-500': $options.disablePrevious,
+      'hover:text-orange-400': !$options.disablePrevious
+    })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_arrow, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_3];
@@ -19832,12 +19857,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })], 8
-  /* PROPS */
+  })], 10
+  /* CLASS, PROPS */
   , _hoisted_2), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     value: $props.data.current_page,
     onChange: _cache[1] || (_cache[1] = function ($event) {
-      return _ctx.$emit('goTo', $event.target.value);
+      return _ctx.$emit('goTo', {
+        pageNumber: $event.target.value,
+        url: $options.baseUrl + '/?' + $event.target.value
+      });
     })
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data.last_page, function (n) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
@@ -19850,11 +19878,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* KEYED_FRAGMENT */
   ))], 40
   /* PROPS, HYDRATE_EVENTS */
-  , _hoisted_5)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: _cache[2] || (_cache[2] = function ($event) {
-      return _ctx.$emit('next');
-    }),
-    disabled: $props.data.current_page === $props.data.last_page
+  , _hoisted_5)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    href: $options.nextUrl,
+    onClick: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+      return _ctx.$emit('next', $options.nextUrl);
+    }, ["prevent"])),
+    disabled: $options.disableNext,
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+      'cursor-not-allowed text-neutral-500': $options.disableNext,
+      'hover:text-orange-400': !$options.disableNext
+    })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_arrow, {
     direction: "forward"
   }, {
@@ -19864,8 +19897,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })], 8
-  /* PROPS */
+  })], 10
+  /* CLASS, PROPS */
   , _hoisted_7)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
 }
 
@@ -19886,8 +19919,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  xmlns: "http://www.w3.org/2000/svg",
   "class": "h-5 w-5 mr-2",
+  xmlns: "http://www.w3.org/2000/svg",
   viewBox: "0 0 20 20",
   fill: "currentColor"
 };
@@ -19901,8 +19934,8 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 var _hoisted_3 = [_hoisted_2];
 var _hoisted_4 = {
   key: 1,
+  "class": "motion-safe animate-bounce h-6 w-6 mr-2",
   xmlns: "http://www.w3.org/2000/svg",
-  "class": "invert h-6 w-6 mr-2",
   fill: "none",
   viewBox: "0 0 24 24",
   stroke: "currentColor"

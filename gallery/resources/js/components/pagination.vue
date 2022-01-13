@@ -1,16 +1,18 @@
 <template>
-    <div class="flex w-full justify-between px-5" v-if="data">
-        <button @click="$emit('previous')" :disabled="data.current_page === 1">
+    <div class="flex w-full justify-between px-5 hover:text-red" v-if="data">
+        <a :href="previousUrl" @click.prevent="$emit('previous', previousUrl)" :disabled="disablePrevious"
+           :class="{'cursor-not-allowed  text-neutral-500': disablePrevious, 'hover:text-orange-400': !disablePrevious}">
             <arrow>Previous</arrow>
-        </button>
+        </a>
         <div>
-            Page: <select :value="data.current_page" @change="$emit('goTo', $event.target.value)">
+            Page: <select :value="data.current_page" @change="$emit('goTo', { pageNumber: $event.target.value, url:  baseUrl + '/?' +  $event.target.value})">
                 <option v-for="n in data.last_page" :key="n" :value="Number(n)">{{ n }}</option>
             </select>
         </div>
-        <button @click="$emit('next')" :disabled="data.current_page === data.last_page">
+        <a :href="nextUrl" @click.prevent="$emit('next', nextUrl)" :disabled="disableNext"
+           :class="{'cursor-not-allowed text-neutral-500': disableNext, 'hover:text-orange-400': !disableNext}">
             <arrow direction="forward">Next</arrow>
-        </button>
+        </a>
     </div>
 </template>
 
@@ -26,17 +28,38 @@
                 default: {}
             }
         },
+        methods: {
+            navigateTo(direction)
+            {
+                if ((this.data.current_page + direction > this.data.last_page) || (this.data.current_page + direction < 1)) {
+                    return null;
+                }
+                return this.baseUrl + '/?' + (this.data.current_page + direction);
+            }
+        ,
+        },
         computed: {
+            baseUrl() {
+                return window.location.pathname.replace(/\/+$/, '');
+            },
+            nextUrl() {
+                return this.navigateTo(+ 1);
+            },
+            previousUrl() {
+                return this.navigateTo(- 1);
+            },
             total() {
                 if (!this.data) {
                     return 0;
                 }
                 return Math.round(this.data.total / this.data.per_page);
+            },
+            disablePrevious() {
+                return this.data.current_page <= 1 || this.data.current_page > this.data.last_page ;
+            },
+            disableNext() {
+                return this.data.current_page >= this.data.last_page;
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

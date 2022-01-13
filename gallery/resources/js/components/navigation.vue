@@ -8,7 +8,7 @@
             </a>
             <div class="flex pl-2 bg-gray-100 bg-opacity-75">
                 <div class="p-5 flex w-32">
-                    <star :active="true"/>
+                    <star :active/>
                     all
                 </div>
                 <a v-for="nav in navigation.children" :key="nav.name" class="p-5 flex w-32"
