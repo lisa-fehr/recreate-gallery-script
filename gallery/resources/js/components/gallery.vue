@@ -38,7 +38,12 @@
             }
         },
         created() {
-            this.getImages(1);
+            const currentPageFromUrl = this.currentPageFromUrl();
+            this.getImages(isNaN(currentPageFromUrl) ? 1 : currentPageFromUrl);
+
+            window.onpopstate = () => {
+                window.location.reload();
+            };
         },
         watch: {
             currentPageNumber(page) {
@@ -47,14 +52,17 @@
         },
         computed: {
             currentPageNumber() {
-                let urlCurrentPage = window.location.href.replace(/^.+\?([0-9]+).*?$/g, "$1");
-                if (this.pagination && urlCurrentPage !== window.location.href && urlCurrentPage !== this.pagination.current_page) {
-                    return this.pagination.current_page = parseInt(urlCurrentPage);
+                const currentPageFromUrl = this.currentPageFromUrl();
+                if (this.pagination && !isNaN(currentPageFromUrl) && currentPageFromUrl !== this.pagination.current_page) {
+                    return currentPageFromUrl;
                 }
                 return this.pagination ? this.pagination.current_page : 1;
-            }
+            },
         },
         methods: {
+            currentPageFromUrl() {
+                return parseInt(window.location.search.replace(/[^0-9]/g, ''));
+            },
             goToPage({pageNumber, url}) {
                 this.pagination.current_page = pageNumber;
                 window.history.pushState({}, '', url);

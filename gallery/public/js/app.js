@@ -19259,7 +19259,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.getImages(1);
+    var currentPageFromUrl = this.currentPageFromUrl();
+    this.getImages(isNaN(currentPageFromUrl) ? 1 : currentPageFromUrl);
+
+    window.onpopstate = function () {
+      window.location.reload();
+    };
   },
   watch: {
     currentPageNumber: function currentPageNumber(page) {
@@ -19268,16 +19273,19 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     currentPageNumber: function currentPageNumber() {
-      var urlCurrentPage = window.location.href.replace(/^.+\?([0-9]+).*?$/g, "$1");
+      var currentPageFromUrl = this.currentPageFromUrl();
 
-      if (this.pagination && urlCurrentPage !== window.location.href && urlCurrentPage !== this.pagination.current_page) {
-        return this.pagination.current_page = parseInt(urlCurrentPage);
+      if (this.pagination && !isNaN(currentPageFromUrl) && currentPageFromUrl !== this.pagination.current_page) {
+        return currentPageFromUrl;
       }
 
       return this.pagination ? this.pagination.current_page : 1;
     }
   },
   methods: {
+    currentPageFromUrl: function currentPageFromUrl() {
+      return parseInt(window.location.search.replace(/[^0-9]/g, ''));
+    },
     goToPage: function goToPage(_ref) {
       var pageNumber = _ref.pageNumber,
           url = _ref.url;
