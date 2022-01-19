@@ -40,16 +40,19 @@ class UberGallery extends Model
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
         }
-        return null;
+        return Storage::disk('gallery')->url('/missing.gif');
     }
 
     public function getThumbnailAttribute()
     {
+        if (! $this->tag) {
+            return null;
+        }
         $url = $this->tag->directory . '/t/' . $this->thumb;
         if (Storage::disk('gallery')->exists($url)) {
             return Storage::disk('gallery')->url($url);
         }
-        return null;
+        return Storage::disk('gallery')->url('/missing.gif');
     }
 
     public function scopeTags(Builder $builder, ...$tags)
@@ -59,5 +62,13 @@ class UberGallery extends Model
             ->join('uber_tag_assoc', 'uber_gallery.id', '=', 'uber_tag_assoc.image_id')
             ->join('uber_tags', 'uber_tag_assoc.tag_id', '=', 'uber_tags.id')
             ->whereIn('uber_tags.name', $tags);
+    }
+
+    public function toArray()
+    {
+        return [
+            'image' => $this->image,
+            'thumbnail' => $this->thumbnail,
+        ];
     }
 }

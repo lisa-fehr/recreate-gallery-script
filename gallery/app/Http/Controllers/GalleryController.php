@@ -10,21 +10,15 @@ class GalleryController extends Controller
 {
     public function __invoke()
     {
-        $images = QueryBuilder::for(UberGallery::class)
+        $paginator = QueryBuilder::for(UberGallery::class)
             ->allowedFilters([
                 AllowedFilter::scope('tags')
             ])
-            ->get()
-            ->reject(function (UberGallery $image) {
-                return empty($image->thumbnail);
-            })
-            ->map(function (UberGallery $image) {
-                return [
-                    'image' => $image->image,
-                    'thumbnail' => $image->thumbnail,
-                ];
-            });
+            ->whereHas('tag')
+            ->whereNotNull('thumb')
+            ->orderBy('thumb', 'desc')
+            ->paginate(12);
 
-        return response()->json($images);
+        return response()->json($paginator);
     }
 }

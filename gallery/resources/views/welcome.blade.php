@@ -17,9 +17,7 @@
     </style>
 </head>
 <body class="antialiased">
-<div id="app">
-    <app filters="{{$filter['tags'] ?? ''}}"/>
-</div>
+<div id="app" data-filters="{{$filter['tags'] ?? ''}}"></div>
 <script src="{{mix('js/app.js')}}"></script>
 </body>
 </html>

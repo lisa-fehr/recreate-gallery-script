@@ -1,23 +1,21 @@
 <template>
     <div>
-        <div v-if="!loading" class="flex justify-items-start">
-            <div class="flex gap-4 p-5">
-                <a v-if="hasCurrent()" :href="parentUrl()" class="inline-flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/>
-                    </svg> Back to {{ parentName() }}
+        <div v-if="!loading">
+            <a v-if="hasCurrent()" :href="parentUrl()" class="pl-5 pt-5 flex w-full items-center">
+                <arrow>
+                    Back to {{ parentName() }}
+                </arrow>
+            </a>
+            <div class="flex pl-2 bg-gray-100 bg-opacity-75">
+                <div class="p-5 flex w-32">
+                    <star active/>
+                    all
+                </div>
+                <a v-for="nav in navigation.children" :key="nav.name" class="p-5 flex w-32"
+                   :href="childUrl(nav)">
+                    <star/>
+                    {{ nav.display_name || nav.name }}
                 </a>
-                <div class="inline-flex">
-                    <star :active="true"/> all
-                </div>
-
-                <div v-for="nav in navigation.children" :key="nav.name">
-                    <a :href="childUrl(nav)" class="inline-flex">
-                        <star/> {{ nav.display_name || nav.name }}
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -25,9 +23,10 @@
 
 <script>
     import Star from '../components/star';
+    import Arrow from '../components/arrow';
 
     export default {
-        components: {Star},
+        components: {Star, Arrow},
         props: {
             filters: {
                 default: null,
@@ -39,7 +38,8 @@
                 portfolioUrl: '/portfolio/',
                 loading: true,
                 navigation: {
-                    default: () => {},
+                    default: () => {
+                    },
                     type: Object,
                 },
             }
@@ -49,7 +49,7 @@
         },
         methods: {
             getFilters() {
-                axios.get('/tags/' + this.filters).then(response => {
+                axios.get('/tags/' + (this.filters ?? '')).then(response => {
                     this.navigation = response.data;
                     this.removeTheAllTag();
                     this.loading = false;

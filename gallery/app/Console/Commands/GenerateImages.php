@@ -10,6 +10,13 @@ use Intervention\Image\Facades\Image;
 
 class GenerateImages extends Command
 {
+    const THUMBNAIL_WIDTH = 125;
+    const THUMBNAIL_HEIGHT = 175;
+    const THUMBNAIL_QUALITY = 75;
+
+    const MAX_IMAGE_WIDTH = 800;
+    const MAX_IMAGE_HEIGHT = 1000;
+
     /**
      * The name and signature of the console command.
      *
@@ -50,6 +57,8 @@ class GenerateImages extends Command
             $this->resizeImage($originalImage);
         }
 
+        $this->createMissingThumbnail();
+
         return 0;
     }
 
@@ -61,17 +70,61 @@ class GenerateImages extends Command
         $originalPath = Storage::disk('gallery-originals')->path($originalImage);
 
         $name = pathinfo($originalImage, PATHINFO_FILENAME);
-        $image = UberGallery::firstWhere('img', $name);
+        $gallery = UberGallery::firstWhere('img', $name);
 
-        if ($image) {
-            $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
-            $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
+        if ($gallery) {
+            $thumbPath = $this->thumbnailDestination . '/' . $gallery->thumb;
+            $imagePath = $this->imageDestination . '/' . $gallery->img . '.' . $gallery->type;
 
-            Image::make($originalPath)->resize(125, 175)->save($thumbPath);
-            Image::make($originalPath)->fit(650)->save($imagePath);
+            Image::make($originalPath)
+                ->resize(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT)
+                ->sharpen(5)
+                ->save($thumbPath, self::THUMBNAIL_QUALITY, pathinfo($gallery->thumb, PATHINFO_EXTENSION));
+
+            $image = Image::make($originalPath);
+            list($width, $height) = $this->calculateWidthHeight($image);
+            $image->resize($width, $height, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($imagePath);
+
             $this->info('Created an image and thumbnail: ' . $originalImage);
         } else {
             $this->info('Could not find: ' . $originalImage);
         }
+    }
+
+    /**
+     * @param \Intervention\Image\Image $image
+     * @return array
+     */
+    private function calculateWidthHeight(\Intervention\Image\Image $image)
+    {
+        $width = self::MAX_IMAGE_WIDTH;
+        $height = self::MAX_IMAGE_HEIGHT;
+
+        if ($image->height() < $height || $image->width() < $width) {
+            return [$image->width(), $image->height()];
+        }
+        if ($image->height() > $image->width()) {
+            return [null, $height];
+        }
+        return [$width, null];
+    }
+
+    private function createMissingThumbnail()
+    {
+        $img = Image::canvas(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, '#ffa500');
+        $img
+        ->line(0, 0, self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, function ($draw) {
+            $draw->color('#ffb52e');
+        })
+        ->line(self::THUMBNAIL_WIDTH, 0, 0, self::THUMBNAIL_HEIGHT, function ($draw) {
+            $draw->color('#ffb52e');
+        })
+        ->text('Missing Image', 28, 20, function ($font) {
+            $font->color('#000');
+        });
+        $img->save(Storage::disk('gallery')->path('missing.gif'), 90, 'gif');
+        $this->info('Created missing image: ' . Storage::disk('gallery')->path('missing.gif'));
     }
 }

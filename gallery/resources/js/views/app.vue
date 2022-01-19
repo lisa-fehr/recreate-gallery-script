@@ -10,7 +10,7 @@
         components: {Gallery},
         props: {
             filters: {
-                default: []
+                type: String,
             }
         }
     };
