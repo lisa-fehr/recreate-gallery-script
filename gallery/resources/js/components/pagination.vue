@@ -1,15 +1,17 @@
 <template>
-    <div class="flex w-full justify-between px-5 hover:text-red" v-if="data">
+    <div class="flex w-full justify-between px-5" v-if="data">
         <a :href="previousUrl" @click.prevent="$emit('previous', previousUrl)" :disabled="disablePrevious"
+           class="py-1"
            :class="{'cursor-not-allowed  text-neutral-500': disablePrevious, 'hover:text-orange-400': !disablePrevious}">
             <arrow>Previous</arrow>
         </a>
         <div>
-            Page: <select :value="data.current_page" @change="$emit('goTo', { pageNumber: $event.target.value, url:  baseUrl + '/?' +  $event.target.value})">
+            Page: <select :value="data.current_page" @change="$emit('goTo', { pageNumber: $event.target.value, url:  baseUrl + '/?' +  $event.target.value})" class="shadow border rounded p-1">
                 <option v-for="n in data.last_page" :key="n" :value="Number(n)">{{ n }}</option>
             </select>
         </div>
         <a :href="nextUrl" @click.prevent="$emit('next', nextUrl)" :disabled="disableNext"
+           class="py-1"
            :class="{'cursor-not-allowed text-neutral-500': disableNext, 'hover:text-orange-400': !disableNext}">
             <arrow direction="forward">Next</arrow>
         </a>

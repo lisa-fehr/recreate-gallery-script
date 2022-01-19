@@ -26,7 +26,7 @@
     import Arrow from '../components/arrow';
 
     export default {
-        components: {Star,Arrow},
+        components: {Star, Arrow},
         props: {
             filters: {
                 default: null,

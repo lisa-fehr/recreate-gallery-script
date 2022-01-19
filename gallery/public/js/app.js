@@ -19831,7 +19831,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "flex w-full justify-between px-5 hover:text-red"
+  "class": "flex w-full justify-between px-5"
 };
 var _hoisted_2 = ["href", "disabled"];
 
@@ -19854,10 +19854,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.$emit('previous', $options.previousUrl);
     }, ["prevent"])),
     disabled: $options.disablePrevious,
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["py-1", {
       'cursor-not-allowed  text-neutral-500': $options.disablePrevious,
       'hover:text-orange-400': !$options.disablePrevious
-    })
+    }])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_arrow, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_3];
@@ -19874,7 +19874,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         pageNumber: $event.target.value,
         url: $options.baseUrl + '/?' + $event.target.value
       });
-    })
+    }),
+    "class": "shadow border rounded p-1"
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.data.last_page, function (n) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       key: n,
@@ -19892,10 +19893,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.$emit('next', $options.nextUrl);
     }, ["prevent"])),
     disabled: $options.disableNext,
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["py-1", {
       'cursor-not-allowed text-neutral-500': $options.disableNext,
       'hover:text-orange-400': !$options.disableNext
-    })
+    }])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_arrow, {
     direction: "forward"
   }, {

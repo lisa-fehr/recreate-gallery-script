@@ -501,6 +501,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .flex-col {
   flex-direction: column;
 }
+.content-center {
+  align-content: center;
+}
 .items-center {
   align-items: center;
 }
@@ -509,6 +512,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .gap-2 {
   gap: 0.5rem;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.border {
+  border-width: 1px;
 }
 .bg-yellow-600 {
   --tw-bg-opacity: 1;
@@ -528,9 +537,19 @@ Ensure the default browser behavior of the `hidden` attribute.
 .p-5 {
   padding: 1.25rem;
 }
+.p-2 {
+  padding: 0.5rem;
+}
+.p-1 {
+  padding: 0.25rem;
+}
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 .pl-5 {
   padding-left: 1.25rem;
