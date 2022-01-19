@@ -38,7 +38,6 @@
                 }
                 return this.baseUrl + '/?' + (this.data.current_page + direction);
             }
-        ,
         },
         computed: {
             baseUrl() {

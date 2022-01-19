@@ -82,7 +82,7 @@
                     url += '&filter[tags]=' + this.filters;
                 }
 
-                return url
+                return url;
             },
             getImages(page) {
                 axios.get(this.galleryUrl(page)).then(response => {

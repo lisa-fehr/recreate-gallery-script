@@ -70,20 +70,20 @@ class GenerateImages extends Command
         $originalPath = Storage::disk('gallery-originals')->path($originalImage);
 
         $name = pathinfo($originalImage, PATHINFO_FILENAME);
-        $image = UberGallery::firstWhere('img', $name);
+        $gallery = UberGallery::firstWhere('img', $name);
 
-        if ($image) {
-            $thumbPath = $this->thumbnailDestination . '/' . $image->thumb;
-            $imagePath = $this->imageDestination . '/' . $image->img . '.' . $image->type;
+        if ($gallery) {
+            $thumbPath = $this->thumbnailDestination . '/' . $gallery->thumb;
+            $imagePath = $this->imageDestination . '/' . $gallery->img . '.' . $gallery->type;
 
             Image::make($originalPath)
                 ->resize(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT)
                 ->sharpen(5)
-                ->save($thumbPath, self::THUMBNAIL_QUALITY, pathinfo($image->thumb, PATHINFO_EXTENSION));
+                ->save($thumbPath, self::THUMBNAIL_QUALITY, pathinfo($gallery->thumb, PATHINFO_EXTENSION));
 
-            $modalImage = Image::make($originalPath);
-            list($width, $height) = $this->calculateWidthHeight($modalImage);
-            $modalImage->resize($width, $height, function ($constraint) {
+            $image = Image::make($originalPath);
+            list($width, $height) = $this->calculateWidthHeight($image);
+            $image->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($imagePath);
 
@@ -94,22 +94,21 @@ class GenerateImages extends Command
     }
 
     /**
-     * @param \Intervention\Image\Image $modalImage
+     * @param \Intervention\Image\Image $image
      * @return array
      */
-    private function calculateWidthHeight(\Intervention\Image\Image $modalImage)
+    private function calculateWidthHeight(\Intervention\Image\Image $image)
     {
         $width = self::MAX_IMAGE_WIDTH;
         $height = self::MAX_IMAGE_HEIGHT;
-        if ($modalImage->height() < $height || $modalImage->width() < $width) {
-            $width = $modalImage->width();
-            $height = $modalImage->height();
-        } elseif ($modalImage->height() > $modalImage->width()) {
-            $width = null;
-        } else {
-            $height = null;
+
+        if ($image->height() < $height || $image->width() < $width) {
+            return [$image->width(), $image->height()];
         }
-        return [$width, $height];
+        if ($image->height() > $image->width()) {
+            return [null, $height];
+        }
+        return [$width, null];
     }
 
     private function createMissingThumbnail()
