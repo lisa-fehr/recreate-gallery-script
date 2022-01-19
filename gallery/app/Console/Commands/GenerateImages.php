@@ -115,7 +115,14 @@ class GenerateImages extends Command
     private function createMissingThumbnail()
     {
         $img = Image::canvas(self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, '#ffa500');
-        $img->text('Missing Image', 20, 20, function ($font) {
+        $img
+        ->line(0, 0, self::THUMBNAIL_WIDTH, self::THUMBNAIL_HEIGHT, function ($draw) {
+            $draw->color('#ffb52e');
+        })
+        ->line(self::THUMBNAIL_WIDTH, 0, 0, self::THUMBNAIL_HEIGHT, function ($draw) {
+            $draw->color('#ffb52e');
+        })
+        ->text('Missing Image', 28, 20, function ($font) {
             $font->color('#000');
         });
         $img->save(Storage::disk('gallery')->path('missing.gif'), 90, 'gif');
